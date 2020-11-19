@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Covid Thingy</title>
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="leaflet/leaflet.css">
+      <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+      <script typ="text/javascript" src="leaflet/leaflet.js"></script>
+      <link rel="stylesheet" href="style.css">
+
+      <link rel="stylesheet" href="leaflet.legend.css" />
+      <script type="text/javascript" src="leaflet.legend.js"></script>
+  </head>
+  <body>
+
+    <div id="map"></div>
+    <script type="text/javascript">
+
+        var map = L.map('map').setView([9.1204, 125.59], 10);
+
+        var basemap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var wmsLayer = L.tileLayer.wms('http://192.168.0.100:8080/geoserver/Covid/wms', {  //diri i-link ang katong geoserver nato mag depende kung unsay gibutang ninyo nga pangalan sa workspace(?)
+            layers: 'Covid:caragaregion_municipalities',
+            format: 'image/png',
+            transparent: true,
+            attribution: "Shaun Romanee-Conti",
+            aIndex: 101,
+          }).addTo(map);
+
+        var legC =  L.control.Legend({
+            title: "1 in 5 shaun is gay",
+            position: "topright",
+            opacity: 0.5,
+            
+            legends: [{
+              label: "your feet",
+              type: "image",
+              url: "1Hand.png",
+            }, {
+              label: "hand it over",
+              type: "image",
+              url: "2Hand.png",
+            }]
+      }).addTo(map);
+
+
+      </script>
+
+      <div class="a">
+        <div class="form-group">
+          <label for="textInput" id="mun_search">Municipality/City:</label>
+          <input class="form-control" type="text" name="Municipality/City" id="textInput">
+        </div>
+      </div>
+
+      <div class="pat">
+        <img src="elmlj1m0quc51.gif" width="50px" height="50px">
+      </div>
+
+  </body>
+</html>
