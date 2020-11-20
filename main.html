@@ -10,9 +10,7 @@
       <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
       <script typ="text/javascript" src="leaflet/leaflet.js"></script>
       <link rel="stylesheet" href="style.css">
-
-      <link rel="stylesheet" href="leaflet.legend.css" />
-      <script type="text/javascript" src="leaflet.legend.js"></script>
+      <script typ="text/javascript" src="jquery.min.js"></script>
   </head>
   <body>
 
@@ -33,64 +31,58 @@
             aIndex: 101,
           }).addTo(map);
 
-        var legC =  L.control.Legend({
-            title: "Total Covid Cases",
-            position: "topright",
-            opacity: 0.5,
-            legends: [{
-              label: "0",
-              type: "polygon",
-              fillColor: "#ff6666",
-              sides: 4,
-            }, {
-              label: "1 to 20",
-              type: "polygon",
-              fillColor: "#ff4c4c",
-              sides: 4,
-            }, {
-              label: "21 to 40",
-              type: "polygon",
-              fillColor: "#ff3232",
-              sides: 4,
-            }, {
-              label: "41 to 60",
-              type: "polygon",
-              fillColor: "#ff1919",
-              sides: 4,
-            }, {
-              label: "61 to 80",
-              type: "polygon",
-              fillColor: "#ff0000",
-              sides: 4,
-            }, {
-              label: "81 to 100",
-              type: "polygon",
-              fillColor: "#e50000",
-              sides: 4,
-            }, {
-              label:"more than 100",
-              type: "polygon",
-              fillColor: "#b20000",
-              sides: 4,
-            }]
-      }).addTo(map);
+      /* This is where we mess with the Legend's appearance */
+      var covidLegend = L.control({position: "bottomright"});
+      covidLegend.onAdd = function(map){
+        var div = L.DomUtil.create("div", "covidLegend");
+        div.innerHTML += "<h4>Total Covid Cases</h4>";
+        div.innerHTML += '<i style="background: #ff6666"></i><span>0</span><br>';
+        div.innerHTML += '<i style="background: #ff4c4c"></i><span>1 to 20</span><br>';
+        div.innerHTML += '<i style="background: #ff3232"></i><span>21 to 40</span><br>';
+        div.innerHTML += '<i style="background: #ff1919"></i><span>41 to 60</span><br>';
+        div.innerHTML += '<i style="background: #ff0000"></i><span>61 to 80</span><br>';
+        div.innerHTML += '<i style="background: #e50000"></i><span>81 to 100</span><br>';
+        div.innerHTML += '<i style="background: #b20000"></i><span>more than 100</span><br>';
+        return div;
+      };
+      covidLegend.addTo(map);
 
+      var artia = L.control({position: "topright"});
+      artia.onAdd = function(map){
+        var div = L.DomUtil.create("div", "artia");
+        div.innerHTML += '<img src="elmlj1m0quc51.gif" width="50px" height="50px" id="pat1">'
+        div.innerHTML += '<img src="elmlj1m0quc51.gif" width="50px" height="50px" id="pat2">'
+        div.innerHTML += '<img src="elmlj1m0quc51.gif" width="50px" height="50px" id="pat3">'
+        return div;
+      }
+      artia.addTo(map);
 
       </script>
 
       <div class="a">
         <div class="form-group">
-          <label for="textInput" id="mun_search">Municipality/City:</label>
-          <input class="form-control" type="text" name="Municipality/City" id="textInput">
+          <input class="form-control" type="text" name="Municipality/City" placeholder="Type Municipality/City" id="input1">
+          <select class="form-control" id="input2">
+            <option value="<"><</option>
+            <option value=">">></option>
+            <option value="=">=</option>
+          </select>
+          <select class="form-control" id="input3">
+            <option value="active_cases">Active cases</option>
+            <option value="deaths">Deaths</option>
+  				  <option value="recoveries">Recoveries</option>
+  				</select>
+          <input class="form-control" type="number" placeholder="Type no. of cases"id="input4"></input>
+          <button type="button" class="btn btn-primary" id="enterBtn">Enter</button>
         </div>
       </div>
 
-      <div class="pat">
-        <img src="elmlj1m0quc51.gif" width="50px" height="50px">
-      </div>
-      <div class="amazonPoint">
-        <p class="amazonInfo">Type the municipality you wish to see - </p>
-        <img src="iUjyJc6.png" width="50px" height="50px">
+
+
+      <div class="artiaPat">
+        <div class="pat">
+          <img src="elmlj1m0quc51.gif" width="50px" height="50px">
+        </div>
       </div>
 
   </body>
