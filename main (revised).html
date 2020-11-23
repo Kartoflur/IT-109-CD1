@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Covid Thingy</title>
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="leaflet/leaflet.css">
+      <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+      <script typ="text/javascript" src="leaflet/leaflet.js"></script>
+      <script typ="text/javascript" src="jquery.min.js"></script>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#map{
+  height: 450px;
+  width: 100%;
+  border: 1px solid #656459;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-image: url(beerus.png);
+  background-size: cover;
+}
+
+/* Style the header */
+header {
+  padding: 30px;
+  background-color: #000000a3;
+  border-style: none none solid none;
+  border-color: #631212;
+}
+
+img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 22%;
+}
+/* Container for flexboxes */
+section {
+  display: -webkit-flex;
+  display: flex;
+}
+
+/* Style the navigation menu */
+nav {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  background: #2703036b;
+  padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Style the content */
+article {
+  -webkit-flex: 3;
+  -ms-flex: 3;
+  flex: 3;
+  background-color: #f1f1f1;
+  padding: 10px;
+}
+
+/* Style the footer */
+footer {
+  background-color: #4a0000;
+  padding: 17px;
+  text-align: center;
+  color: white;
+}
+
+.covidLegend{
+  padding: 6px 8px;
+  font: 12px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 0.8);
+  line-height: 24px;
+  color: #555;
+}
+.covidLegend h4{
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 2px 12px 8px;
+  color: #777;
+}
+.covidLegend span{
+  position: relative;
+  bottom: 3px;
+}
+.covidLegend i{
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin: 0 8px 0 0;
+  opacity: 0.7;
+}
+.a{
+
+  padding: 10px;
+
+}
+.form-control, #enterBtn{
+	margin-top: 30px;
+}
+
+
+/* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
+@media (max-width: 600px) {
+  section {
+    -webkit-flex-direction: column;
+    flex-direction: column;
+  }
+
+img{
+  width: 40%;
+}
+}
+</style>
+</head>
+<body>
+<header>
+  <img src="covid.png">
+</header>
+
+<section>
+  <nav>
+      <div class="a">
+        <div class="form-group">
+          <input class="form-control" type="text" name="Municipality/City" placeholder="Type Municipality/City" id="input1">
+          <select class="form-control" id="input2">
+            <option value="<"><</option>
+            <option value=">">></option>
+            <option value="=">=</option>
+          </select>
+          <select class="form-control" id="input3">
+            <option value="active_cases">Active cases</option>
+            <option value="deaths">Deaths</option>
+  				  <option value="recoveries">Recoveries</option>
+  				</select>
+          <input class="form-control" type="number" placeholder="Type no. of cases"id="input4"></input>
+          <button type="button" class="btn btn-primary" id="enterBtn">Enter</button>
+        </div>
+      </div>
+  </nav>
+  
+  <article>
+		<div id="map"></div>
+  </article>
+</section>
+
+<footer>
+  <p style="font-size: 13px;">Disclaimer: The data used in this webpage is not the exact data from Department of Health. This is a complaince for IT-109 - SYSTEMS INTEGRATION AND ARCHITECTURE 1 </p>
+</footer>
+
+</body>
+
+
+ <script type="text/javascript">
+
+        var map = L.map('map').setView([9.1204, 125.59], 10);
+
+        var basemap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var wmsLayer = L.tileLayer.wms('http://192.168.0.100:8080/geoserver/Covid/wms', {  //diri i-link ang katong geoserver nato mag depende kung unsay gibutang ninyo nga pangalan sa workspace(?)
+            layers: 'Covid:caragaregion_municipalities',
+            format: 'image/png',
+            transparent: true,
+            attribution: "RENZ AND SHAUN",
+            aIndex: 101,
+          }).addTo(map);
+
+      /* This is where we mess with the Legend's appearance */
+      var covidLegend = L.control({position: "bottomright"});
+      covidLegend.onAdd = function(map){
+        var div = L.DomUtil.create("div", "covidLegend");
+        div.innerHTML += "<h4>Total Covid Cases</h4>";
+        div.innerHTML += '<i style="background: #ffffff"></i><span>0</span><br>';
+        div.innerHTML += '<i style="background: #fbcacb"></i><span>1 to 20</span><br>';
+        div.innerHTML += '<i style="background: #f98185"></i><span>21 to 40</span><br>';
+        div.innerHTML += '<i style="background: #f72929"></i><span>41 to 60</span><br>';
+        div.innerHTML += '<i style="background: #940202"></i><span>61 to 80</span><br>';
+        div.innerHTML += '<i style="background: #310000"></i><span>81 to 100</span><br>';
+        div.innerHTML += '<i style="background: #000000"></i><span>more than 100</span><br>';
+        return div;
+      };
+      covidLegend.addTo(map);
+
+
+      </script>
+</html>
